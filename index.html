@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Don't Sleep Together</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #111;
+        color: #eee;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      button {
+        padding: 1em 2em;
+        border: none;
+        border-radius: 20px;
+        background: #a0aec4;
+        color: white;
+        font-size: 2em;
+        cursor: pointer;
+      }
+      button.active {
+        background: #01fc59;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Don't Sleep Together</h1>
+    <p>Prevents your computer from going to sleep while active (:</p>
+    <button id="toggle">Enable Wake Lock</button>
+
+    <script>
+      let wakeLock = null;
+      const btn = document.getElementById("toggle");
+
+      async function requestWakeLock() {
+        try {
+          wakeLock = await navigator.wakeLock.request("screen");
+          btn.textContent = "Disable Wake Lock";
+          btn.classList.add("active");
+
+          wakeLock.addEventListener("release", () => {
+            btn.textContent = "Enable Wake Lock";
+            btn.classList.remove("active");
+          });
+        } catch (err) {
+          alert("Wake Lock not available: " + err.message);
+        }
+      }
+
+      async function releaseWakeLock() {
+        if (wakeLock !== null) {
+          await wakeLock.release();
+          wakeLock = null;
+        }
+      }
+
+      btn.addEventListener("click", () => {
+        if (wakeLock) {
+          releaseWakeLock();
+        } else {
+          requestWakeLock();
+        }
+      });
+
+      document.addEventListener("visibilitychange", () => {
+        if (wakeLock !== null && document.visibilityState === "visible") {
+          requestWakeLock();
+        }
+      });
+    </script>
+  </body>
+</html>
