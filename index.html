@@ -39,6 +39,15 @@
       let wakeLock = null;
       const btn = document.getElementById("toggle");
 
+      if (!("wakeLock" in navigator)) {
+        btn.disabled = true;
+        btn.textContent = "Wake Lock not supported";
+        btn.style.background = "#555";
+        btn.style.cursor = "not-allowed";
+        document.querySelector("p").textContent =
+          "Your browser doesn’t support wake locks. You can keep your screen awake by changing your power settings.";
+      }
+
       async function requestWakeLock() {
         try {
           wakeLock = await navigator.wakeLock.request("screen");
