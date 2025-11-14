@@ -13,3 +13,4 @@ and then run it by
 ```bash
 ./sleepPreventer.sh
 ```
+To Run the HTML version, open the `index.html` file in your web browser. Just double-click it or open it through your browser's file menu.
